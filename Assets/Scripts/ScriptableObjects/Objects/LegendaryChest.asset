@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b639b3d9b6db5774a869fca2e89347c5, type: 3}
+  m_Name: LegendaryChest
+  m_EditorClassIdentifier: 
+  chestPrefab: {fileID: 2289971924987629438, guid: 19842b8864fc84d47b87c7459a57e318, type: 3}
+  type: 3
+  thumb: {fileID: 21300000, guid: eb1afaa2cc1f27b4daacd881a37242d5, type: 3}
+  thumbOpen: {fileID: 173491907, guid: ff00d84352c364d4897d764699e61ed9, type: 3}
+  minGold: 200
+  maxGold: 250
+  minGems: 20
+  maxGems: 30
+  timer: 100
