@@ -123,10 +123,3 @@ public class PopUp : Singleton<PopUp>
     }
 
 }
-public enum PopUpState
-{
-    StartTimer,
-    CountDown,
-    CountFinished,
-    Open
-}
