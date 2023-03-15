@@ -62,6 +62,7 @@ public class ChestView : MonoBehaviour
     }
     private void SetLocked()
     {
+        if(currentState != null)    {   currentState.gameObject.SetActive(false);   }
         currentState = Locked;
         chestTypeText.text = $"{Controller.Model.chestType}";
         counterDuration.text = Controller.TimerText;
@@ -108,5 +109,6 @@ public class ChestView : MonoBehaviour
         Locked.gameObject.SetActive(false);
         countDown.gameObject.SetActive(false);
         Unlocked.gameObject.SetActive(false);
+        currentState.gameObject.SetActive(false);
     }
 }

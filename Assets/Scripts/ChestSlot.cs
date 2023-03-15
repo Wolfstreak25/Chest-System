@@ -43,7 +43,7 @@ public class ChestSlot : Singleton<ChestSlot>
     }
     public void StopUnlocking(ChestController requester)
     {
-        if(requester.TimerActive && Unlocking.Count >= 1 && Unlocking.Equals(requester))
+        if(requester.TimerActive && Unlocking.Count >= 1)
         {
             Unlocking.Dequeue();
             EventManagement.Instance.TimerState(false);

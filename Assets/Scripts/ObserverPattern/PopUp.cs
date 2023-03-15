@@ -37,10 +37,14 @@ public class PopUp : Singleton<PopUp>
     {
         this.gameObject.GetComponent<Button>().enabled = true;
         EventManagement.Instance.timerState += TimerActive;
+        EventManagement.Instance.updateResource += SetRewards;
     }
     private void Update() 
     {
-        CheckUnlockStatus();
+        if(Chest != null)
+        {
+            CheckUnlockStatus();
+        }
     }
     public void ShowPopUp(ChestController _chest)
     {
@@ -60,7 +64,7 @@ public class PopUp : Singleton<PopUp>
             UnlockWaitState();
         }
         // No Timer Running and Is locked
-        else if(!isTimerActive && Chest.chestState == ChestState.LockedState)
+        else if(Chest.chestState == ChestState.LockedState && !isTimerActive)
         {
             LockedState();
         }
@@ -86,14 +90,8 @@ public class PopUp : Singleton<PopUp>
     }
     public void OpenChest()
     {
-        // Move to controller
-        // 
+        // Moved to controller
         openChest.gameObject.SetActive(true);
-        int gems = Random.Range(Chest.Model.minGems,Chest.Model.maxGems);
-        int gold = Random.Range(Chest.Model.minGold,Chest.Model.maxGold);
-        EventManagement.Instance.UpdateResource(gold,gems);
-        rewardGem.text = $"{gems}";
-        rewardGold.text = $"{gold}";
         Chest.SetState(ChestState.OpenedState);
         return;
     }
@@ -110,6 +108,11 @@ public class PopUp : Singleton<PopUp>
     private void TimerActive(bool state)
     {
         isTimerActive = state;
+    }
+    private void SetRewards(int gold, int gems)
+    {
+        rewardGem.text = $"{gems}";
+        rewardGold.text = $"{gold}";
     }
     // UI Button Events
     public void StartCountDown()
@@ -154,5 +157,6 @@ public class PopUp : Singleton<PopUp>
         openChest.gameObject.SetActive(false);
         NoMoneyPanel.gameObject.SetActive(false);
         EventManagement.Instance.timerState -= TimerActive;
+        EventManagement.Instance.updateResource -= SetRewards;
     }
 } 
