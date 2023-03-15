@@ -13,6 +13,6 @@ public class ChestObject : ScriptableObject
     public int maxGold;
     public int minGems;
     public int maxGems;
-    [Header("Timer (in Seconds)")]
-    public int timer;
+    [Header("Unlock Duration (in Seconds)")]
+    public int UnlockDuration;
 }

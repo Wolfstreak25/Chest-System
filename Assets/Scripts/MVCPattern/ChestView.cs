@@ -6,57 +6,107 @@ using UnityEngine.UI;
 using TMPro;
 public class ChestView : MonoBehaviour
 {
-    [SerializeField] private Transform Locked;
-    [SerializeField] private Transform Unlocked;
-    [SerializeField] private Transform countDown;
+    [Header("Chest Image")]
     [SerializeField] private Image chestThumb;
-    [SerializeField] private TextMeshProUGUI timerText;
+    [Header("Locked State")]
+    [SerializeField] private Transform Locked;
     [SerializeField] private TextMeshProUGUI chestTypeText;
-    
+    [SerializeField] private TextMeshProUGUI counterDuration;
+    [Header("Unlocked State")]
+    [SerializeField] private Transform Unlocked;
+    [Header("CountDown State")]
+    [SerializeField] private Transform countDown;
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI unlockGem;
     private ChestController Controller;
-    private ChestState currentState;
+    private Transform currentState;
+    private Coroutine timer;
     private void Update() 
     {
-        TimerText(Controller.Model.CountDown);
+        if(Controller.chestState == ChestState.CountDownState)
+        {
+            timerText.text = Controller.TimerText;
+            unlockGem.text = $"{Controller.UnlockGems}";
+        }
     }
     public void SetController(ChestController _controller)
     {
         this.Controller = _controller;
         chestThumb.sprite = Controller.Model.Thumb;
-        chestTypeText.text = $"{Controller.Model.type}";
+        chestTypeText.text = $"{Controller.Model.chestType}";
     }
     public void OnSelect ()
     {
         UIManagement.Instance.SetPopUp(this.Controller);
     }
+    // Can moved to controller
     public void ChangeState(ChestState state)
     {
+        
         switch(state)
         {
             case ChestState.LockedState :
-                Locked.gameObject.SetActive(true);
-                countDown.gameObject.SetActive(false);
-                Unlocked.gameObject.SetActive(false);
+                SetLocked();
                 break;
             case ChestState.CountDownState :
-                Locked.gameObject.SetActive(false);
-                countDown.gameObject.SetActive(true);
+                SetCountDown();
                 break;
             case ChestState.UnlockedState :
-                countDown.gameObject.SetActive(false);
-                Locked.gameObject.SetActive(false);
-                Unlocked.gameObject.SetActive(true);
+                SetUnlocked();
                 break;
             case ChestState.OpenedState:
-                Controller.DeActive();
+                SetOpened();
                 break;
         }
+        currentState.gameObject.SetActive(true);
     }
-    private void TimerText(int duration)
+    private void SetLocked()
     {
-        int hr = (duration/60)/60;
-        int min = (duration/60)%60;
-        int sec = (duration%60)%60;
-        timerText.text = (hr > 0) ?  $"{hr:00}Hr {min:00}Min" : $"{min:00}Min {sec:00}Sec";
+        currentState = Locked;
+        chestTypeText.text = $"{Controller.Model.chestType}";
+        counterDuration.text = Controller.TimerText;
+    }
+    private void SetCountDown()
+    {
+        if(Controller.StartTimerRequest())
+        {
+            currentState.gameObject.SetActive(false);
+            currentState = countDown;
+            Controller.setTimerRunning(true);
+            timerText.gameObject.SetActive(true);
+            timer = StartCoroutine(CountDown());
+        }
+    }
+    private void SetUnlocked()
+    {
+        Controller.StopUnlocking();
+        if(timer != null)
+        {
+            StopCoroutine(timer);
+        }
+        Controller.setTimerRunning(false);
+        currentState.gameObject.SetActive(false);
+        currentState = Unlocked;
+    }
+    private void SetOpened()
+    {
+        currentState.gameObject.SetActive(false);
+        Controller.ChestOpened();
+    }
+    
+    private IEnumerator CountDown()
+    {
+        while(Controller.Model.UnlockDuration > 0) 
+        {
+            Controller.Model.UnlockDuration--;
+            yield return new WaitForSeconds(1f);
+        }
+        Controller.SetState(ChestState.UnlockedState);
+    }
+    private void OnDisable() 
+    {
+        Locked.gameObject.SetActive(false);
+        countDown.gameObject.SetActive(false);
+        Unlocked.gameObject.SetActive(false);
     }
 }

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: CommonChest
   m_EditorClassIdentifier: 
   chestPrefab: {fileID: 2289971924987629438, guid: 19842b8864fc84d47b87c7459a57e318, type: 3}
+  type: 0
   thumb: {fileID: 21300000, guid: 4670ca767be89fa45b26ffe785707a1f, type: 3}
   thumbOpen: {fileID: -1333275429, guid: ff00d84352c364d4897d764699e61ed9, type: 3}
   minGold: 10
   maxGold: 15
   minGems: 1
   maxGems: 2
-  timer: 10
+  UnlockDuration: 100

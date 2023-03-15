@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class GamePlay : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int Gold;
+    [SerializeField] private int Gems;
+    [SerializeField] private int ChestCost;
+    private void Start() 
     {
-        
+        EventManagement.Instance.updateResource += UpdateCurrency;
+        UIManagement.Instance.UpdateUI(Gold,Gems);
     }
-
-    // Update is called once per frame
-    void Update()
+    private void OnDisable() 
     {
-        
+        EventManagement.Instance.updateResource -= UpdateCurrency;
     }
+   public void ChestSpawner()
+   {
+        if(Gold >= ChestCost)
+        {
+            ChestService.Instance.spawnChest();
+            UpdateCurrency(-ChestCost,0);
+        }
+        else
+        {
+            EventManagement.Instance.EnablePopUp();
+            PopUp.Instance.NoMoney();
+        }
+   }
+   private void UpdateCurrency(int gold, int gems)
+   {
+        Gold += gold;
+        Gems += gems;
+        UIManagement.Instance.UpdateUI(Gold,Gems);
+   }
 }

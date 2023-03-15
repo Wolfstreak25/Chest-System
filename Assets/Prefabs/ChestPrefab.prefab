@@ -381,8 +381,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -59.1}
-  m_SizeDelta: {x: 128, y: 26}
+  m_AnchoredPosition: {x: 0, y: -65}
+  m_SizeDelta: {x: 128, y: 29.3518}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5041717027347275119
 CanvasRenderer:
@@ -443,7 +443,7 @@ MonoBehaviour:
   m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 16
   m_fontSizeMax: 26
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -708,12 +708,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec5496834b5a92468bf333173283106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chestThumb: {fileID: 5041717029025866498}
   Locked: {fileID: 5041717028146465061}
+  chestTypeText: {fileID: 5041717027347275118}
+  counterDuration: {fileID: 5041717027919634619}
   Unlocked: {fileID: 5041717028570567161}
   countDown: {fileID: 5041717027991974385}
-  chestThumb: {fileID: 5041717029025866498}
   timerText: {fileID: 5041717026934814199}
-  chestTypeText: {fileID: 5041717027347275118}
+  unlockGem: {fileID: 5041717028407386263}
 --- !u!1 &5041717027919634613
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,7 +728,7 @@ GameObject:
   - component: {fileID: 5041717027919634616}
   - component: {fileID: 5041717027919634619}
   m_Layer: 5
-  m_Name: Chect_Duration
+  m_Name: Chest_Duration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -810,8 +812,8 @@ MonoBehaviour:
   m_fontSize: 26
   m_fontSizeBase: 26
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 14
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -985,7 +987,7 @@ MonoBehaviour:
   m_fontSize: 18
   m_fontSizeBase: 18
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -1039,7 +1041,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5041717028146465061
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1436,7 +1438,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4670ca767be89fa45b26ffe785707a1f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

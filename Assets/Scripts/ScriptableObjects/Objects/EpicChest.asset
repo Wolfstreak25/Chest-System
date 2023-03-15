@@ -20,4 +20,4 @@ MonoBehaviour:
   maxGold: 60
   minGems: 10
   maxGems: 12
-  timer: 50
+  UnlockDuration: 500

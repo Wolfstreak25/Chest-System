@@ -7,7 +7,7 @@ public class ChestController
     public ChestView View{get;private set;}
     public ChestModel Model{get;private set;}
     public ChestState chestState{get;private set;}
-    public int ChestID{get;private set;}
+    public bool TimerActive{get;private set;}
     private ChestSlotController slot;
     public ChestController(ChestModel _model, ChestView _view, Transform spawn)
     {
@@ -17,13 +17,17 @@ public class ChestController
         View.SetController(this);
         Model.SetController(this);
     }
-    public RectTransform ChestTransform
+    public void SetActive(ChestSlotController _slot)
     {
-        get
-        {
-            return View.GetComponent<RectTransform>();
-        }
+        this.slot = _slot;
+        this.View.gameObject.SetActive(true);
+        Model.ResetTimer();
+        ChestTransform.transform.SetParent(slot.transform);
+        ChestTransform.transform.localPosition = Vector3.zero ;
+        ChestTransform.transform.localScale = Vector3.one;
+        SetState(ChestState.LockedState);
     }
+    public RectTransform ChestTransform     {   get {    return View.GetComponent<RectTransform>();  } }
     public void SetState(ChestState state)
     {
         this.chestState = state;
@@ -35,35 +39,52 @@ public class ChestController
         int gemsReward = Random.Range(Model.minGems,Model.maxGems);
         EventManagement.Instance.UpdateResource(goldReward,gemsReward);
     }
-    private void OpenedChest()
+    public string TimerText
     {
-        DeActive();
+        get
+        {
+            int duration = Model.UnlockDuration;
+            int hr = (duration/60)/60;
+            int min = (duration/60)%60;
+            int sec = (duration%60)%60;
+            string text = (hr > 0) ?  $"{hr:0}Hr {min:0}Min" : $"{min:0}Min {sec:0}Sec";
+            return text;
+        }
     }
-    public void SetActive(ChestSlotController _slot)
+    public int UnlockGems
     {
-        SetState(ChestState.LockedState);
-        this.slot = _slot;
-        this.View.gameObject.SetActive(true);
-        Model.ResetTimer();
-        ChestID = slot.Index;
-        ChestTransform.transform.SetParent(slot.transform);
-        ChestTransform.transform.localPosition = Vector3.zero ;
-        ChestTransform.transform.localScale = Vector3.one;
-        chestState = ChestState.SpawnedState;
+        get
+        {
+            int count = 0;
+            int duration = Model.UnlockDuration;
+            int hr = (duration/60)/60;
+            int min = (duration/60)%60;
+            int sec = (duration%60)%60;
+
+            if(hr > 1)  {   count += hr*6;  }
+            if(min > 0) {   count += min/10;    if(min%10 > 0)  {count += 1;} }
+            if(sec>0 && min == 0 && hr == 0)    {   count = 1;  }
+            return count;
+        }
     }
-    public void DeActive()
+    public void setTimerRunning(bool status)
     {
-        ChestPool.Instance.ReturnItem(this);
+        TimerActive = status;
+    }
+    // Requests
+    public bool StartTimerRequest()
+    {
+        return slot.StartTimerRequest();
+    }
+    public void StopUnlocking()
+    {
+        slot.StopUnlocking(this);
+    }
+    public void ChestOpened()
+    {
+        Rewards();
         ChestTransform.transform.SetParent(null);
         this.View.gameObject.SetActive(false);
         slot.SetEmptySlot();
     }
-}
-public enum ChestState 
-{
-    SpawnedState,
-    LockedState,
-    UnlockedState,
-    CountDownState,
-    OpenedState
 }

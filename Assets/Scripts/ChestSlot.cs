@@ -4,40 +4,58 @@ using UnityEngine;
 
 public class ChestSlot : Singleton<ChestSlot>
 {
-    private SlotPool slotPool;
     [SerializeField] private RectTransform content;
     [SerializeField] private ChestSlotController slotController;
     [SerializeField] private int maxSlot = 4;
-    private List<ChestSlotController> chestSlot = new List<ChestSlotController>();
-    private int emptySlotCount = 0;
-    private void OnEnable() 
-    {
-        slotPool = this.gameObject.GetComponent<SlotPool>();
-    }
+    private ChestSlotController[] chestSlot;
+    public Queue<ChestController> Unlocking = new Queue<ChestController>();
+    public bool isUnlocking{get;private set;}
     private void Start()
     {
+        chestSlot = new ChestSlotController[maxSlot];
+        isUnlocking = false;
+        EventManagement.Instance.TimerState(false);
         for(int i = 0; i < maxSlot; i++ )
         {
-            SpawnSlot();
+            SpawnSlot(i);
         }
     }
-    private void Update()
+    // private void Update()
+    // {
+    //     foreach (ChestSlotController Slot in chestSlot)
+    //     {
+    //         if(Slot.GetChest.TimerActive)
+    //         {
+    //            StartUnlocking(Slot.GetChest);
+    //         }
+    //     }
+    // }
+    public bool StartUnlocking(ChestController slot)
     {
-        //if last element of the list is not an empty slot spawn empty slot
-        foreach (var Slot in chestSlot)
+        if(Unlocking.Count == 0)
         {
-            if(Slot.IsEmpty)
-            {
-                emptySlotCount++;
-            }
+            Unlocking.Enqueue(slot);
+            isUnlocking = true;
+            EventManagement.Instance.TimerState(true);
+            return true;
+        }
+        return false;
+    }
+    public void StopUnlocking(ChestController requester)
+    {
+        if(requester.TimerActive && Unlocking.Count >= 1 && Unlocking.Equals(requester))
+        {
+            Unlocking.Dequeue();
+            EventManagement.Instance.TimerState(false);
+            isUnlocking = false;
         }
     }
-    public void SpawnSlot ()
+    public void SpawnSlot ( int index)
     {
-        var Slot = slotPool.GetSlot(slotController,content);
+        ChestSlotController Slot = GameObject.Instantiate<ChestSlotController>(slotController);
         Slot.transform.SetParent(content);
-        Slot.Index = chestSlot.Count;
-        chestSlot.Add(Slot);
+        Slot.GetSlotController(this, index);
+        chestSlot[index] = Slot;
     }
     public void EmptySlot(int index)
     {
@@ -49,7 +67,6 @@ public class ChestSlot : Singleton<ChestSlot>
         {
             if (slot.IsEmpty)
             {
-                //Debug.LogFormat($"{chestSlot.IndexOf(slot)}");;
                 return slot;
             }
         }
